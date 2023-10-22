@@ -1,12 +1,31 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import InputComponent from "../components/FormELements/InputElement";
 import { loginFormControls } from "../utils";
 import { useRouter } from "next/navigation";
 
+const initialFormdata = {
+  email: "",
+  password: "",
+};
+
 export default function Login() {
+  const [formData, setFormdata] = useState(initialFormdata);
+
   const router = useRouter();
+
+  console.log(formData);
+
+  function isValidForm() {
+    return formData &&
+      formData.email &&
+      formData.email.trim() !== "" &&
+      formData.password &&
+      formData.password.trim() !== ""
+      ? true
+      : false;
+  }
 
   return (
     <div className="bg-white relative">
@@ -25,12 +44,20 @@ export default function Login() {
                       type={controlItem.type}
                       placeholder={controlItem.placeholder}
                       label={controlItem.label}
+                      value={formData[controlItem.id]}
+                      onChange={(event) => {
+                        setFormdata({
+                          ...formData,
+                          [controlItem.id]: event.target.value,
+                        });
+                      }}
                     />
                   ) : null
                 )}
                 <button
-                  className="inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg 
+                  className="disabled:opacity-50 inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg 
                   text-white transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide"
+                  disabled={!isValidForm()}
                 >
                   Login
                 </button>
