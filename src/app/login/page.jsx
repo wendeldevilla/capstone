@@ -1,9 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import InputComponent from "../components/FormELements/InputElement";
 import { loginFormControls } from "../utils";
 import { useRouter } from "next/navigation";
+import { login } from "@/services/login";
+import { GlobalContext } from "../context";
+import Cookies from "js-cookie";
 
 const initialFormdata = {
   email: "",
@@ -12,6 +15,8 @@ const initialFormdata = {
 
 export default function Login() {
   const [formData, setFormdata] = useState(initialFormdata);
+  const { isAuthUser, setIsAuthUser, user, setUser } =
+    useContext(GlobalContext);
 
   const router = useRouter();
 
@@ -26,6 +31,28 @@ export default function Login() {
       ? true
       : false;
   }
+
+  async function handleLogin() {
+    const res = await login(formData);
+
+    console.log(res);
+
+    if (res.success) {
+      setIsAuthUser(true);
+      setUser(res?.finalData?.user);
+      setFormdata(initialFormdata);
+      Cookies.set("token", res?.finalData?.token);
+      localStorage.setItem("user", JSON.stringify(res?.finalData?.user));
+    } else {
+      setIsAuthUser(false);
+    }
+  }
+
+  console.log(isAuthUser, user);
+
+  useEffect(() => {
+    if (isAuthUser) router.push("/");
+  }, [isAuthUser]);
 
   return (
     <div className="bg-white relative">
@@ -58,6 +85,7 @@ export default function Login() {
                   className="disabled:opacity-50 inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg 
                   text-white transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide"
                   disabled={!isValidForm()}
+                  onClick={handleLogin}
                 >
                   Login
                 </button>

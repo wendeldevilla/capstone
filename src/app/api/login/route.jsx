@@ -3,6 +3,7 @@ import User from "@/models/user";
 import { compare } from "bcryptjs";
 import Joi from "joi";
 import jwt from "jsonwebtoken";
+import { NextResponse } from "next/server";
 
 const schema = Joi.object({
   email: Joi.string().email().required(),
