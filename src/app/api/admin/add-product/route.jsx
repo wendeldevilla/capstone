@@ -23,7 +23,7 @@ export async function POST(req) {
     const user = "admin";
 
     if (user === "admin") {
-      const extractData = await request.json();
+      const extractData = await req.json();
 
       const {
         name,
@@ -64,7 +64,7 @@ export async function POST(req) {
       } else {
         return NextResponse.json({
           success: false,
-          message: "Failed to add the product. Please try again !",
+          message: "Failed to add the product ! please try again",
         });
       }
     } else {

@@ -173,3 +173,15 @@ export const adminAddProductformControls = [
     componentType: "input",
   },
 ];
+
+export const firebaseConfig = {
+  apiKey: "AIzaSyCXOfXOls3oLz5un-CdHp4q8_MXTrdbbik",
+  authDomain: "capstone-621b7.firebaseapp.com",
+  projectId: "capstone-621b7",
+  storageBucket: "capstone-621b7.appspot.com",
+  messagingSenderId: "599011820920",
+  appId: "1:599011820920:web:c36e0d407853487bc6348d",
+  measurementId: "G-C0TP6PF4ES",
+};
+
+export const firebaseStorageURL = "gs://capstone-621b7.appspot.com";
