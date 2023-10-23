@@ -10,7 +10,7 @@ import {
   firebaseConfig,
   firebaseStorageURL,
 } from "@/app/utils";
-import { addNewProduct } from "@/services/product";
+import { addNewProduct, udpateAProduct } from "@/services/product";
 import { initializeApp } from "firebase/app";
 import {
   getDownloadURL,
@@ -19,7 +19,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const app = initializeApp(firebaseConfig);
@@ -68,10 +68,20 @@ const initialFormData = {
 export default function AdminAddNewProduct() {
   const [formData, setFormData] = useState(initialFormData);
 
-  const { componentLevelLoader, setComponentLevelLoader } =
-    useContext(GlobalContext);
+  const {
+    componentLevelLoader,
+    setComponentLevelLoader,
+    currentUpdatedProduct,
+    setCurrentUpdatedProduct,
+  } = useContext(GlobalContext);
+
+  console.log(currentUpdatedProduct);
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (currentUpdatedProduct !== null) setFormData(currentUpdatedProduct);
+  }, [currentUpdatedProduct]);
 
   async function handleImage(event) {
     console.log(event.target.files);
@@ -90,7 +100,10 @@ export default function AdminAddNewProduct() {
   async function handleAddProduct() {
     setComponentLevelLoader({ loading: true, id: "" });
 
-    const res = await addNewProduct(formData);
+    const res =
+      currentUpdatedProduct !== null
+        ? await udpateAProduct(formData)
+        : await addNewProduct(formData);
 
     console.log(res);
 
@@ -101,6 +114,7 @@ export default function AdminAddNewProduct() {
       });
 
       setFormData(initialFormData);
+      setCurrentUpdatedProduct(null);
       setTimeout(() => {
         router.push("/admin-view/all-products");
       }, 1000);
@@ -160,10 +174,16 @@ export default function AdminAddNewProduct() {
           >
             {componentLevelLoader && componentLevelLoader.loading ? (
               <ComponentLevelLoader
-                text={"Adding Product"}
+                text={
+                  currentUpdatedProduct !== null
+                    ? "Updating Product"
+                    : "Adding product"
+                }
                 color={"#ffffff"}
                 loading={componentLevelLoader && componentLevelLoader.loading}
               />
+            ) : currentUpdatedProduct !== null ? (
+              "Update Product"
             ) : (
               "Add Product"
             )}
