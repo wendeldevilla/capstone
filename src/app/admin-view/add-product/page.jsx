@@ -2,6 +2,9 @@
 
 import InputComponent from "@/app/components/FormELements/InputElement";
 import SelectComponent from "@/app/components/FormELements/SelectElement";
+import ComponentLevelLoader from "@/app/components/Loader/component/componentlevel";
+import Notification from "@/app/components/Notification";
+import { GlobalContext } from "@/app/context";
 import {
   adminAddProductformControls,
   firebaseConfig,
@@ -15,7 +18,9 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useContext, useState } from "react";
+import { toast } from "react-toastify";
 
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app, firebaseStorageURL);
@@ -63,6 +68,11 @@ const initialFormData = {
 export default function AdminAddNewProduct() {
   const [formData, setFormData] = useState(initialFormData);
 
+  const { componentLevelLoader, setComponentLevelLoader } =
+    useContext(GlobalContext);
+
+  const router = useRouter();
+
   async function handleImage(event) {
     console.log(event.target.files);
     const extractImageUrl = await helperForUploadingImageToFirebase(
@@ -78,9 +88,29 @@ export default function AdminAddNewProduct() {
   }
 
   async function handleAddProduct() {
+    setComponentLevelLoader({ loading: true, id: "" });
+
     const res = await addNewProduct(formData);
 
     console.log(res);
+
+    if (res.success) {
+      setComponentLevelLoader({ loading: false, id: "" });
+      toast.success(res.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+
+      setFormData(initialFormData);
+      setTimeout(() => {
+        router.push("/admin-view/all-products");
+      }, 1000);
+    } else {
+      toast.error(res.message, {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      setComponentLevelLoader({ loading: false, id: "" });
+      setFormData(initialFormData);
+    }
   }
 
   console.log(formData);
@@ -128,10 +158,19 @@ export default function AdminAddNewProduct() {
             onClick={handleAddProduct}
             className="inline-flex w-full item-center justify-center bg-black px-6 py-4 text-white font-medium uppercase tracking-wide"
           >
-            Add Product
+            {componentLevelLoader && componentLevelLoader.loading ? (
+              <ComponentLevelLoader
+                text={"Adding Product"}
+                color={"#ffffff"}
+                loading={componentLevelLoader && componentLevelLoader.loading}
+              />
+            ) : (
+              "Add Product"
+            )}
           </button>
         </div>
       </div>
+      <Notification />
     </div>
   );
 }
