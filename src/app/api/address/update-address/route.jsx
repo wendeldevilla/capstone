@@ -13,13 +13,13 @@ export async function PUT(req) {
 
     if (isAuthUser) {
       const data = await req.json();
-      const { _id, fullname, city, address, zipCode } = data;
+      const { _id, fullname, province, address, zipCode } = data;
 
       const updateAddress = await Address.findOneAndUpdate(
         {
           _id: _id,
         },
-        { _id, fullname, city, address, zipCode },
+        { _id, fullname, province, address, zipCode },
         { new: true }
       );
 

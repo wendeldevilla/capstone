@@ -185,3 +185,34 @@ export const firebaseConfig = {
 };
 
 export const firebaseStorageURL = "gs://capstone-621b7.appspot.com";
+
+export const addNewAddressFormControls = [
+  {
+    id: "fullName",
+    type: "input",
+    placeholder: "Enter your full name",
+    label: "Full Name",
+    componentType: "input",
+  },
+  {
+    id: "address",
+    type: "input",
+    placeholder: "Enter your full address",
+    label: "Address",
+    componentType: "input",
+  },
+  {
+    id: "province",
+    type: "input",
+    placeholder: "Enter your province",
+    label: "Province",
+    componentType: "input",
+  },
+  {
+    id: "zipCode",
+    type: "input",
+    placeholder: "Enter your Zip Code",
+    label: "Zip Code",
+    componentType: "input",
+  },
+];
