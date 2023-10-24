@@ -36,7 +36,7 @@ export const getAllAdminProducts = async () => {
   }
 };
 
-export const udpateAProduct = async (formData) => {
+export const updateAProduct = async (formData) => {
   try {
     const res = await fetch("/api/admin/update-product", {
       method: "PUT",
@@ -44,10 +44,12 @@ export const udpateAProduct = async (formData) => {
         "content-type": "application/json",
         Authorization: `Bearer ${Cookies.get("token")}`,
       },
+      cache: "no-store",
       body: JSON.stringify(formData),
     });
 
     const data = await res.json();
+
     return data;
   } catch (e) {
     console.log(e);
@@ -64,6 +66,7 @@ export const deleteAProduct = async (id) => {
     });
 
     const data = await res.json();
+
     return data;
   } catch (e) {
     console.log(e);
@@ -79,6 +82,7 @@ export const productByCategory = async (id) => {
         cache: "no-store",
       }
     );
+
     const data = await res.json();
 
     return data;
@@ -90,10 +94,10 @@ export const productByCategory = async (id) => {
 export const productById = async (id) => {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/admin/product-by-category?id=${id}`,
+      `http://localhost:3000/api/admin/product-by-id?id=${id}`,
       {
         method: "GET",
-        cahce: "no-store",
+        cache: "no-store",
       }
     );
 
