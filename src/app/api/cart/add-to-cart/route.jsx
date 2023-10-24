@@ -29,36 +29,42 @@ export async function POST(req) {
         });
       }
 
+      console.log(productID, userID);
+
       const isCurrentCartItemAlreadyExists = await Cart.find({
         productID: productID,
         userID: userID,
       });
 
-      if (isCurrentCartItemAlreadyExists) {
+      console.log(isCurrentCartItemAlreadyExists);
+
+      if (isCurrentCartItemAlreadyExists?.length > 0) {
         return NextResponse.json({
           success: false,
           message:
-            "This product is already added in the cart. Please add different product !",
+            "Product is already added in cart! Please add different product",
         });
       }
 
       const saveProductToCart = await Cart.create(data);
 
+      console.log(saveProductToCart);
+
       if (saveProductToCart) {
         return NextResponse.json({
           success: true,
-          message: "Product is added to cart!",
+          message: "Product is added to cart !",
         });
       } else {
         return NextResponse.json({
           success: false,
-          message: "Failed to add product to cart. Please try again later.",
+          message: "failed to add the product to cart ! Please try again.",
         });
       }
     } else {
       return NextResponse.json({
         success: false,
-        message: "You are not authenticated !",
+        message: "You are not authenticated",
       });
     }
   } catch (e) {
