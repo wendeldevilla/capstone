@@ -12,17 +12,17 @@ export const navOptions = [
   {
     id: "listingComponent",
     label: "Components",
-    path: "/product/listing/men",
+    path: "/product/listing/components",
   },
   {
     id: "listingLaptop",
     label: "Laptops",
-    path: "/product/listing/women",
+    path: "/product/listing/laptops",
   },
   {
     id: "listingPeripherals",
     label: "Peripherals",
-    path: "/product/listing/kids",
+    path: "/product/listing/peripherals",
   },
 ];
 
