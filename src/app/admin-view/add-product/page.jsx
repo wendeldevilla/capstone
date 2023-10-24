@@ -10,7 +10,11 @@ import {
   firebaseConfig,
   firebaseStorageURL,
 } from "@/app/utils";
-import { addNewProduct, udpateAProduct } from "@/services/product";
+import {
+  addNewProduct,
+  udpateAProduct,
+  updateAProduct,
+} from "@/services/product";
 import { initializeApp } from "firebase/app";
 import {
   getDownloadURL,
@@ -99,10 +103,9 @@ export default function AdminAddNewProduct() {
 
   async function handleAddProduct() {
     setComponentLevelLoader({ loading: true, id: "" });
-
     const res =
       currentUpdatedProduct !== null
-        ? await udpateAProduct(formData)
+        ? await updateAProduct(formData)
         : await addNewProduct(formData);
 
     console.log(res);
