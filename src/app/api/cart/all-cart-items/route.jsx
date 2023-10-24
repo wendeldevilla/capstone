@@ -18,33 +18,31 @@ export async function GET(req) {
       if (!id)
         return NextResponse.json({
           success: false,
-          message: "Please log in !",
+          message: "Please log in!",
         });
-
-      const extractAllCartItems = await Cart.Find({ userID: id })
-        .populate("userID")
-        .populate("productID");
+      const extractAllCartItems = await Cart.find({ userID: id }).populate(
+        "productID"
+      );
 
       if (extractAllCartItems) {
-        NextResponse.json({ success: true, extractAllCartItems });
+        return NextResponse.json({ success: true, data: extractAllCartItems });
       } else {
         return NextResponse.json({
           success: false,
-          message: "No cart items are found.",
+          message: "No Cart items are found !",
           status: 204,
         });
       }
     } else {
       return NextResponse.json({
         success: false,
-        message: "You are not authenticated !",
+        message: "You are not authenticated",
       });
     }
   } catch (e) {
-    console.log(e);
     return NextResponse.json({
       success: false,
-      message: "Something went wrong ! Please try again.",
+      message: "Something went wrong ! Please try again",
     });
   }
 }

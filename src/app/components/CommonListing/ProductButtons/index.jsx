@@ -15,6 +15,8 @@ export default function ProductButton({ item }) {
     setComponentLevelLoader,
     componentLevelLoader,
     user,
+    showCartModal,
+    setShowCartModal,
   } = useContext(GlobalContext);
   const router = useRouter();
 
@@ -24,6 +26,7 @@ export default function ProductButton({ item }) {
     setComponentLevelLoader({ loading: true, id: item._id });
 
     const res = await deleteAProduct(item._id);
+
     if (res.success) {
       setComponentLevelLoader({ loading: false, id: "" });
       toast.success(res.message, {
@@ -40,16 +43,21 @@ export default function ProductButton({ item }) {
 
   async function handleAddToCart(getItem) {
     setComponentLevelLoader({ loading: true, id: getItem._id });
+
     const res = await addToCart({ productID: getItem._id, userID: user._id });
 
     if (res.success) {
       toast.success(res.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
+      setComponentLevelLoader({ loading: false, id: "" });
+      setShowCartModal(true);
     } else {
       toast.error(res.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
+      setComponentLevelLoader({ loading: false, id: "" });
+      setShowCartModal(true);
     }
 
     console.log(res);
@@ -74,7 +82,7 @@ export default function ProductButton({ item }) {
         componentLevelLoader.loading &&
         item._id === componentLevelLoader.id ? (
           <ComponentLevelLoader
-            text={"Deleting product"}
+            text={"Deleting Product"}
             color={"#ffffff"}
             loading={componentLevelLoader && componentLevelLoader.loading}
           />
@@ -89,7 +97,17 @@ export default function ProductButton({ item }) {
         onClick={() => handleAddToCart(item)}
         className="mt-1.5 flex w-full justify-center bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
       >
-        Add to Cart
+        {componentLevelLoader &&
+        componentLevelLoader.loading &&
+        componentLevelLoader.id === item._id ? (
+          <ComponentLevelLoader
+            text={"Adding to cart"}
+            color={"#ffffff"}
+            loading={componentLevelLoader && componentLevelLoader.loading}
+          />
+        ) : (
+          "Add To Cart"
+        )}
       </button>
     </>
   );
